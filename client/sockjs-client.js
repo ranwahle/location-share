@@ -1,11 +1,23 @@
-const sockjs_url = '/echo';
-const sockjs = new SockJS(sockjs_url);
+fetch('/get-socket-url').then(response =>{
+    console.log('sckjs url', response)
+    response.text().then(sockjs_url => {
+        sockjs = new SockJS(sockjs_url);
+        sockjs.onmessage = (e) => {
+            console.log('message', e);
+            const location = JSON.parse(e.data);
+            mapComponent.setMarker(location);
+        }
+        ;
+        sockjs.onclose = () => {
+            console.log('[*] close');
+        };
+    });
+})
+
+let sockjs ; //= new SockJS(sockjs_url);
 
 
-sockjs.onopen    = function()  {
-   // print('[*] open', sockjs.protocol);
- // sendLocation();
-};
+
 
 function sendLocation () {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -23,12 +35,6 @@ function sendLocationToServer(location) {
 }
 
 
-sockjs.onmessage = (e) => { console.log('message', e);
-    const location = JSON.parse(e.data);
-    mapComponent.setMarker(location);
-}
-    ;
-sockjs.onclose   = () => {console.log('[*] close');};
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('button#btnSendLocation').addEventListener('click', () => {
