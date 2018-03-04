@@ -8,11 +8,17 @@ sockjs.onopen    = function()  {
         console.log('position', position);
         console.log('map', map);
 
-        const location = {lat: position.coords.latitude, lng: position.coords.longitude};
-        sockjs.send(location);
+        const location = {lat: position.coords.latitude, lng: position.coords.longitude, name: document.querySelector('#txtName').value};
+        sockjs.send(JSON.stringify( location));
     })
 };
-sockjs.onmessage = (e) => { console.log('message', e)} ;
-sockjs.onclose   = () => {console.log('[*] close');};
 
+
+
+sockjs.onmessage = (e) => { console.log('message', e);
+    const location = JSON.parse(e.data);
+    mapComponent.setMarker(location);
+}
+    ;
+sockjs.onclose   = () => {console.log('[*] close');};
 

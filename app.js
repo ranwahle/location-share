@@ -1,20 +1,21 @@
-var express = require('express');
-var sockjs  = require('sockjs');
-var http    = require('http');
+const express = require('express');
+const sockjs  = require('sockjs');
+const http    = require('http');
 
 // 1. Echo sockjs server
-var sockjs_opts = {sockjs_url: "http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"};
+const sockjs_opts = {sockjs_url: "http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"};
 
-var sockjs_echo = sockjs.createServer(sockjs_opts);
+const sockjs_echo = sockjs.createServer(sockjs_opts);
 sockjs_echo.on('connection', function(conn) {
     conn.on('data', function(message) {
-        conn.write(message);
+        console.log('message', message)
+        conn.write( message);
     });
 });
 
 // 2. Express server
-var app = express(); /* express.createServer will not work here */
-var server = http.createServer(app);
+const app = express(); /* express.createServer will not work here */
+const server = http.createServer(app);
 
 sockjs_echo.installHandlers(server, {prefix:'/echo'});
 
