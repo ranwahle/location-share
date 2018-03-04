@@ -2,14 +2,25 @@ const express = require('express');
 const sockjs  = require('sockjs');
 const http    = require('http');
 
+const clients = [];
+
+function broadcast(data) {
+    clients.forEach(client => {
+        client.write(data);
+    })
+}
+
 // 1. Echo sockjs server
 const sockjs_opts = {sockjs_url: "http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"};
 
 const sockjs_echo = sockjs.createServer(sockjs_opts);
 sockjs_echo.on('connection', function(conn) {
+    clients.push(conn);
     conn.on('data', function(message) {
+
         console.log('message', message)
-        conn.write( message);
+       // conn.write( message);
+        broadcast(message);
     });
 });
 
