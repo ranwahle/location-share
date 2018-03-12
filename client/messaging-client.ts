@@ -1,3 +1,8 @@
+import {GoogleLocation} from './models/google-location.model';
+import {mapComponent} from './location-client';
+import * as SockJS from 'sockjs-client';
+
+
 fetch('/get-socket-url').then(response =>{
     console.log('sckjs url', response)
     response.text().then(sockjs_url => {
@@ -22,14 +27,16 @@ let sockjs ; //= new SockJS(sockjs_url);
 function sendLocation () {
     navigator.geolocation.getCurrentPosition((position) => {
         console.log('position', position);
-        console.log('map', map);
+       // console.log('map', map);
 
-        const location = {lat: position.coords.latitude, lng: position.coords.longitude, name: document.querySelector('#txtName').value};
+        const location: GoogleLocation =
+            {lat: position.coords.latitude, lng: position.coords.longitude, name: (<HTMLInputElement>
+                    document.querySelector('#txtName')).value};
         sendLocationToServer(location);
     })
 }
 
-function sendLocationToServer(location) {
+export function sendLocationToServer(location) {
     sockjs.send(JSON.stringify( location));
 
 }

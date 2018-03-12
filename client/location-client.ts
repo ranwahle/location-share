@@ -1,12 +1,21 @@
 // import 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAuMsKw1WTDbwXPIjSErzn4Yu1qiF2Xqwk&callback=initMap';
 
+
+import {sendLocationToServer} from './messaging-client';
+import {GoogleLocation} from './models/google-location.model';
+
+declare let google;
+
 function getMapComponent() {
 
 }
 
-let mapComponent;
+export let mapComponent;
 
 class LocationSharingMap {
+
+    markers;
+    map;
     constructor() {
         const mapElement = document.querySelector('#map')
         const worldCenter = {lat: 0, lng: 0};
@@ -27,7 +36,7 @@ class LocationSharingMap {
 
         navigator.geolocation.getCurrentPosition((position) => {
             console.log('position', position);
-            console.log('map', map);
+//            console.log('map', map);
 
             const location = {lat: position.coords.latitude, lng: position.coords.longitude};
            // this.setMarker(location);
@@ -35,7 +44,7 @@ class LocationSharingMap {
     }
 
     removeMarker(marker) {
-        this.markers = this.marksers.filter(m => m !== marker);
+        this.markers = this.markers.filter(m => m !== marker);
         marker.setMap(null);
     }
 
@@ -46,7 +55,7 @@ class LocationSharingMap {
         this.markers = [];
     }
 
-    setMarker(location) {
+    setMarker(location: GoogleLocation) {
         const marker = new google.maps.Marker({
             position: location,
             map: this.map
@@ -55,9 +64,10 @@ class LocationSharingMap {
     }
 }
 
-function initMap() {
+export function initMap() {
 
 mapComponent = new LocationSharingMap();
 //});
 }
 
+window['initMap'] = initMap;

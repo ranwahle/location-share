@@ -37,7 +37,7 @@ console.log(' [*] Listening on 0.0.0.0:9999' );
 server.listen(9999, '0.0.0.0');
 
 app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/index.html');
+    res.sendfile(__dirname + '/client/dist/index.html');
 });
 
 app.get('/get-socket-url', (req, res) => {
@@ -51,4 +51,4 @@ app.get('/get-socket-url', (req, res) => {
 //
 //
 //
-  app.use('/client/', express.static('client'))
+  app.use('/client/', express.static('client/dist'))
